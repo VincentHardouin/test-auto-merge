@@ -1,21 +1,21 @@
-name: release
+name: automerge check
 
 on:
-  push:
-    branches:
-      - main
-  repository_dispatch:
-    types: [ 'deploy' ]
-  workflow_dispatch:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+  check_suite:
+    types:
+      - completed
+  status:
+    types:
+      - success
 
 jobs:
-  release:
+  automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: 1024pix/pix-actions/release@main
+      - uses: 1024pix/pix-actions/auto-merge@main
         with:
-          updateMajorVersion: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          auto_merge_token: "${{ secrets.PIX_SERVICE_ACTIONS_TOKEN }}"
